@@ -146,7 +146,7 @@ To implement **trustless verifiable retrieval** over HTTP gateways (ipfs crate v
 
 **What it discards for minimal mode**: None — this is a full node.
 
-**Takeaway for ada-ipfs**: rust-ipfs is **not** a gateway client — it's a server. Wrong reference.
+**Takeaway for the ipfs crate**: rust-ipfs is **not** a gateway client — it's a server. Wrong reference.
 
 ### py-ipfs (ipfs-shipyard/py-ipfs) [4]
 
@@ -158,7 +158,7 @@ To implement **trustless verifiable retrieval** over HTTP gateways (ipfs crate v
 
 **What it uses**: HTTP API client (requests), no libp2p, no block validation
 
-**Takeaway for ada-ipfs**: py-ipfs-http-client is a **trusted gateway wrapper**, not verifiable. Wrong reference.
+**Takeaway for the ipfs crate**: py-ipfs-http-client is a **trusted gateway wrapper**, not verifiable. Wrong reference.
 
 ### Helia (@helia/http, @helia/verified-fetch) [2]
 
@@ -197,7 +197,7 @@ const resp = await verifiedFetch('ipfs://bafybeigdyr.../path/to/file')
 - libp2p (no swarm, no DHT, no bitswap)
 - Local block storage (ephemeral cache only, or delegate to gateway)
 
-**Takeaway for ada-ipfs**: **@helia/http is the canonical minimal client**. Ada should replicate this architecture.
+**Takeaway for the ipfs crate**: **@helia/http is the canonical minimal client**. Ada should replicate this architecture.
 
 ---
 
