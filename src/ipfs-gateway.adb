@@ -1,5 +1,6 @@
 pragma SPARK_Mode (Off);
 
+with Ada.IO_Exceptions;
 with GNAT.Sockets;
 
 package body IPFS.Gateway is
@@ -131,22 +132,28 @@ package body IPFS.Gateway is
          Write (Channel.all, Req_Array);
       end;
 
-      --  Read response.
+      --  Read response until EOF (Connection: close) or buffer full.
+      Read_Loop :
       loop
          declare
             Chunk : Stream_Element_Array (1 .. 4096);
             Chunk_Last : Stream_Element_Offset;
          begin
             Read (Channel.all, Chunk, Chunk_Last);
-            exit when Chunk_Last < Chunk'First;
+            exit Read_Loop when Chunk_Last < Chunk'First;
 
             Response_Buffer (Last + 1 .. Last + (Chunk_Last - Chunk'First + 1)) :=
               Chunk (Chunk'First .. Chunk_Last);
             Last := Last + (Chunk_Last - Chunk'First + 1);
 
-            exit when Last >= Response_Buffer'Last;
+            exit Read_Loop when Last >= Response_Buffer'Last;
+         exception
+            when Ada.IO_Exceptions.Device_Error
+               | Ada.IO_Exceptions.End_Error =>
+               --  Peer closed mid-read: treat as end of body.
+               exit Read_Loop;
          end;
-      end loop;
+      end loop Read_Loop;
 
       Close_Socket (Socket);
 
