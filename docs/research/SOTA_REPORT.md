@@ -1,8 +1,8 @@
-# SOTA Report: IPFS Ecosystem (ada-ipfs research)
+# SOTA Report: IPFS Ecosystem (ipfs crate research)
 
 **Date**: 2026-09-07  
 **Researcher**: Claude-4.5  
-**Purpose**: Foundations for ada-ipfs v0.1 design — minimal trustless HTTP gateway client
+**Purpose**: Foundations for ipfs crate v0.1 design — minimal trustless HTTP gateway client
 
 ---
 
@@ -32,7 +32,7 @@
 
 ## 2. Minimal Spec Set for Verifiable HTTP Gateway Client
 
-To implement **trustless verifiable retrieval** over HTTP gateways (ada-ipfs v0.1 goal), the following specs are required:
+To implement **trustless verifiable retrieval** over HTTP gateways (ipfs crate v0.1 goal), the following specs are required:
 
 ### Core primitives (MUST implement)
 
@@ -207,7 +207,7 @@ const resp = await verifiedFetch('ipfs://bafybeigdyr.../path/to/file')
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Public API (ada-ipfs v0.1)                             │
+│  Public API (ipfs crate v0.1)                             │
 │  - IPFS.Get(CID) → Bytes                                │
 │  - IPFS.Cat(CID, Path) → Stream                         │
 │  - IPFS.Verify_CAR(CAR_Bytes) → Boolean                 │
@@ -343,7 +343,7 @@ end IPFS;
 
 ## 6. Key Findings Summary
 
-1. **No Ada IPFS exists** (first-mover advantage for kokhlo/ada-ipfs)
+1. **No Ada IPFS exists** (first-mover advantage for kokhlo/ipfs)
 2. **Minimal spec set**: CID + multihash/multibase/multicodec + dag-pb + UnixFS + CAR v1 + trustless gateway HTTP
 3. **Test vectors**: ipld/codec-fixtures (CAR), js-multibase (multibase), gateway-conformance (HTTP), go-car/testdata (edge cases)
 4. **Reference architecture**: Helia @helia/http (NOT rust-ipfs — that's a full node)

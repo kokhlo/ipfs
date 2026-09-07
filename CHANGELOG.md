@@ -22,4 +22,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test suite: 125+ assertions against kubo-0.43-generated fixtures
 - CI: GitHub Actions matrix (ubuntu-22.04/24.04, macos-14/15)
 
-[0.1.0]: https://github.com/kokhlo/ada-ipfs/releases/tag/v0.1.0
+[0.1.0]: https://github.com/kokhlo/ipfs/releases/tag/v0.1.0

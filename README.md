@@ -1,4 +1,6 @@
-# ada-ipfs
+# ipfs
+
+[![CI](https://github.com/kokhlo/ipfs/actions/workflows/ci.yml/badge.svg)](https://github.com/kokhlo/ipfs/actions/workflows/ci.yml)
 
 **Native IPFS client library for Ada.** Parse CIDs, read CAR archives, and fetch content
 from IPFS HTTP gateways with cryptographic verification — no daemon, no libp2p, no trust
@@ -6,8 +8,8 @@ in the gateway.
 
 ## Why
 
-The Alire index (800+ crates) had zero IPFS libraries. ada-ipfs fills that gap: an
-Ada-native, verifiable, dependency-free client for reading IPFS content.
+The Alire index (800+ crates) had zero IPFS libraries. this crate fills that gap: a
+native, verifiable, dependency-free client for reading IPFS content.
 
 **Trustless by design:** every block fetched through a gateway is hashed (SHA2-256) and
 checked against the CID before your code ever sees it. A malicious or broken gateway
