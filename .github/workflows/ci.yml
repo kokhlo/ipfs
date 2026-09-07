@@ -21,18 +21,16 @@ jobs:
           toolchain: gnat_native=16.1.0 gprbuild=26.0.1
 
       - name: Build library
-        run: gprbuild -p -P ipfs.gpr
+        run: alr exec -- gprbuild -p -P ipfs.gpr
 
       - name: Build tests
-        run: gprbuild -p -P ipfs_tests.gpr
+        run: alr exec -- gprbuild -p -P ipfs_tests.gpr
 
       - name: Run unit tests (codecs, CAR, UnixFS — offline)
-        run: |
-          ./bin/ipfs-tests
-          ./bin/ipfs-car-tests
+        run: ./bin/ipfs_tests_runner
 
       - name: Build examples
-        run: gprbuild -p -P examples/examples.gpr
+        run: alr exec -- gprbuild -p -P examples/examples.gpr
 
   style:
     runs-on: ubuntu-24.04
@@ -43,4 +41,4 @@ jobs:
         with:
           toolchain: gnat_native=16.1.0 gprbuild=26.0.1
       - name: Compile with all warnings as errors
-        run: gprbuild -p -P ipfs_tests.gpr
+        run: alr exec -- gprbuild -p -P ipfs_tests.gpr
