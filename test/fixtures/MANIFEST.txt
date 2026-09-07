@@ -1,0 +1,46 @@
+# ada-ipfs test fixtures — generated with kubo 0.43.0 (2026-09-07)
+# Deterministic content (stable CIDs). Regenerate: `ipfs add` + `ipfs dag export`.
+
+## single.txt
+Single-block UnixFS file (raw-leaf), CIDv1 base32:
+    bafkreiexwmlay7yehnir7u554rrpgtxtc4lnlxxggwhpvdemykfsmw2xqi
+Same content CIDv0 (dag-pb wrapped):
+    QmarWQsVmm85BgiJxB3GkgegSzJuqyEXAhAWPxQUmWvEGQ
+sha256(file bytes) = 97b3160c7f043b511fd3bde462f34ef31716d5dee6358efa8c8cc28b265b5782
+len = 61 bytes
+
+## single_v1.car
+CARv1 of single.txt (root: raw-leaf block). Sections: 1 (root raw block).
+Root: bafkreiexwmlay7yehnir7u554rrpgtxtc4lnlxxggwhpvdemykfsmw2xqi
+
+## single_v0.car
+CARv1 with CIDv0 root QmarWQsVmm85BgiJxB3GkgegSzJuqyEXAhAWPxQUmWvEGQ
+(dag-pb wrapped: UnixFS Data field + no Links), 161 bytes total.
+
+## big_root_block.bin
+dag-pb root node of chunked 300000-byte file (5 x 64KiB raw leaves + root).
+CID: bafybeifeqomemfb3xnqkb6a2sekgjxmrh2woxdwtfvzfzu5yq5demb5snm
+sha256(block bytes) = a4839846143bbb60a0f81a911464dd913eaceb8ed32d725cd3b887464607b26b
+len = 58 bytes (2 links + unixfs Data)
+
+## big_v1.car
+CARv1 of the chunked file (6 sections: header + root + 5 leaves), 300378 bytes.
+Root: bafybeifeqomemfb3xnqkb6a2sekgjxmrh2woxdwtfvzfzu5yq5demb5snm
+Original file: 5 x 65536 + 38560 = 300000 bytes; file sha256 NOT in file (chunked), verify via CAR.
+
+## dir_block.bin
+dag-pb directory node (1 entry: inner.txt):
+    bafybeiboykq3jz7gmjduzzcqde5xai4gtcroypzzogmemqmxcgaa3gfyg4
+
+## dir_v1.car
+CARv1 of directory tree (2 sections: dir root + inner.txt leaf), 230 bytes.
+Root: bafybeiboykq3jz7gmjduzzcqde5xai4gtcroypzzogmemqmxcgaa3gfyg4
+inner.txt CID: bafkreigsnau5bwt2mqbvgqasno5kdtmhx7wmp7et72ruzwkz43yu53j3vm
+inner.txt content: "This file lives in a directory fixture.\n" (38 bytes)
+
+## Generation commands (kubo 0.43.0)
+    ipfs add --cid-version=1 --quiet single.txt
+    ipfs add --cid-version=0 --quiet single.txt
+    ipfs dag export <root> > <name>.car
+    ipfs block get <dir-root> > dir_block.bin
+    ipfs block get <big-root> > big_root_block.bin

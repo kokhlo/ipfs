@@ -1,0 +1,1 @@
+Hello, Ada-IPFS! This is a single-block UnixFS file fixture.

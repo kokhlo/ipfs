@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, macos-14, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Alire
+        uses: alire-project/setup-alire@v5
+        with:
+          toolchain: gnat_native=16.1.0 gprbuild=26.0.1
+
+      - name: Build library
+        run: gprbuild -p -P ipfs.gpr
+
+      - name: Build tests
+        run: gprbuild -p -P ipfs_tests.gpr
+
+      - name: Run unit tests (codecs, CAR, UnixFS — offline)
+        run: |
+          ./bin/ipfs-tests
+          ./bin/ipfs-car-tests
+
+      - name: Build examples
+        run: gprbuild -p -P examples/examples.gpr
+
+  style:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Alire
+        uses: alire-project/setup-alire@v5
+        with:
+          toolchain: gnat_native=16.1.0 gprbuild=26.0.1
+      - name: Compile with all warnings as errors
+        run: gprbuild -p -P ipfs_tests.gpr

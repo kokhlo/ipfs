@@ -1,0 +1,18 @@
+with "ipfs.gpr";
+
+project IPFS_Tests is
+   for Source_Dirs use ("test");
+   for Object_Dir use "obj";
+   for Exec_Dir use "bin";
+   for Main use ("ipfs_tests_runner.adb");
+   for Create_Missing_Dirs use "True";
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        ("-gnatwa", "-gnatwe", "-gnat2022");
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-Es");
+   end Binder;
+end IPFS_Tests;
