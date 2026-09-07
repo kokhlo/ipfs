@@ -6,6 +6,7 @@ with Multihash_Tests;
 with CID_Tests;
 with DagPB_Tests;
 with UnixFS_Tests;
+with CAR_Tests;
 
 with Ada.Text_IO;
 with Ada.Exceptions;
@@ -18,6 +19,7 @@ begin
    CID_Tests.Run;
    DagPB_Tests.Run;
    UnixFS_Tests.Run;
+   CAR_Tests.Run;
    Ada.Text_IO.New_Line;
    Ada.Text_IO.Put_Line ("ada-ipfs: all suites completed");
 exception
