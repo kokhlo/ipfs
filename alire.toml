@@ -10,3 +10,5 @@ licenses = "MIT"
 tags = ["ipfs", "cid", "multihash", "car", "unixfs", "gateway", "distributed"]
 
 project-files = ["ipfs.gpr"]
+
+website = "https://github.com/kokhlo/ipfs"
