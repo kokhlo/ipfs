@@ -15,7 +15,7 @@ native, verifiable, dependency-free client for reading IPFS content.
 checked against the CID before your code ever sees it. A malicious or broken gateway
 cannot make you accept wrong bytes.
 
-## Features (v0.1)
+## Features (v0.2)
 
 - ✅ **CID** v0 (`Qm…`) and v1 (`bafy…`): parse, encode, base conversion (base32, base58btc)
 - ✅ **Multihash**: sha2-256 + identity, encode/decode/verify
@@ -115,7 +115,7 @@ End-to-end (requires `ipfs daemon` on 127.0.0.1:8080): `examples/fetch_cid`.
 
 ## Status
 
-v0.1 — see [REQUIREMENTS.md](REQUIREMENTS.md) for scope, [docs/research/SOTA_REPORT.md](docs/research/SOTA_REPORT.md)
+v0.2 — see [REQUIREMENTS.md](REQUIREMENTS.md) for scope, [docs/research/SOTA_REPORT.md](docs/research/SOTA_REPORT.md)
 for the ecosystem survey. Non-goals for v0.1: bitswap, DHT, pubsub, TLS gateways,
 content creation (add/pin).
 
