@@ -1,44 +1,65 @@
-name: CI
+name: build-and-test
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
-  build-and-test:
+  build-test:
+    name: ${{ matrix.os }} / GNAT ${{ matrix.gnat }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-14, macos-15]
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest, macos-latest]
+        gnat: ["14.2.1", "16.1.0"]
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Alire
         uses: alire-project/setup-alire@v5
         with:
-          toolchain: gnat_native=16.1.0 gprbuild=26.0.1
+          toolchain: gnat_native=${{ matrix.gnat }} gprbuild=26.0.1
 
-      - name: Build library
-        run: alr exec -- gprbuild -p -P ipfs.gpr
+      - name: Expose Alire toolchain binaries on PATH
+        # setup-alire does not always put gprbuild on PATH; running it through
+        # 'alr exec' instead injects an environment that makes gprbuild emit
+        # duplicate LC_RPATH entries (fatal on newer macOS dyld with GNAT
+        # 14.x). Plain binaries from the toolchain dir behave correctly.
+        run: |
+          if ! command -v gprbuild >/dev/null 2>&1; then
+            for d in "$HOME"/.local/share/alire/toolchains/*/bin; do
+              echo "$d" >> "$GITHUB_PATH"
+            done
+          fi
 
-      - name: Build tests
-        run: alr exec -- gprbuild -p -P ipfs_tests.gpr
+      - name: Build library and tests
+        run: |
+          gprbuild -p -P ipfs.gpr
+          gprbuild -p -P ipfs_tests.gpr
 
-      - name: Run unit tests (codecs, CAR, UnixFS — offline)
+      - name: Run test suites (codecs, CAR, UnixFS — offline)
         run: ./bin/ipfs_tests_runner
 
       - name: Build examples
-        run: alr exec -- gprbuild -p -P examples/examples.gpr
+        run: gprbuild -p -P examples/examples.gpr
 
   style:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Alire
         uses: alire-project/setup-alire@v5
         with:
           toolchain: gnat_native=16.1.0 gprbuild=26.0.1
+      - name: Expose Alire toolchain binaries on PATH
+        run: |
+          if ! command -v gprbuild >/dev/null 2>&1; then
+            for d in "$HOME"/.local/share/alire/toolchains/*/bin; do
+              echo "$d" >> "$GITHUB_PATH"
+            done
+          fi
       - name: Compile with all warnings as errors
-        run: alr exec -- gprbuild -p -P ipfs_tests.gpr
+        run: gprbuild -p -P ipfs_tests.gpr

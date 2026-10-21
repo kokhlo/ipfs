@@ -248,6 +248,63 @@ package body Multibase_Tests is
                "Wrong exception: " & Ada.Exceptions.Exception_Name (E));
       end;
 
+      --  Base58 with 'O' (excluded from Bitcoin alphabet)
+      declare
+         use Ada.Streams;
+      begin
+         declare
+            Dummy : constant Stream_Element_Array := Decode ("z1O1");
+         begin
+            Test ("reject base58 with 'O'", False, "Should raise Malformed_Encoding");
+         end;
+      exception
+         when Malformed_Encoding =>
+            Test ("reject base58 with 'O'", True);
+         when E : others =>
+            Test
+              ("reject base58 with 'O'",
+               False,
+               "Wrong exception: " & Ada.Exceptions.Exception_Name (E));
+      end;
+
+      --  Base58 with 'I' / 'l' (excluded from Bitcoin alphabet)
+      declare
+         use Ada.Streams;
+      begin
+         declare
+            Dummy : constant Stream_Element_Array := Decode ("zIlI");
+         begin
+            Test ("reject base58 with 'I'/'l'", False, "Should raise Malformed_Encoding");
+         end;
+      exception
+         when Malformed_Encoding =>
+            Test ("reject base58 with 'I'/'l'", True);
+         when E : others =>
+            Test
+              ("reject base58 with 'I'/'l'",
+               False,
+               "Wrong exception: " & Ada.Exceptions.Exception_Name (E));
+      end;
+
+      --  Base32 with '1' (not in RFC 4648 alphabet)
+      declare
+         use Ada.Streams;
+      begin
+         declare
+            Dummy : constant Stream_Element_Array := Decode ("babc1");
+         begin
+            Test ("reject base32 with '1'", False, "Should raise Malformed_Encoding");
+         end;
+      exception
+         when Malformed_Encoding =>
+            Test ("reject base32 with '1'", True);
+         when E : others =>
+            Test
+              ("reject base32 with '1'",
+               False,
+               "Wrong exception: " & Ada.Exceptions.Exception_Name (E));
+      end;
+
       New_Line;
       Put_Line ("========================================");
       Put_Line

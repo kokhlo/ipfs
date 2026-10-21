@@ -2,6 +2,7 @@
 pragma SPARK_Mode (Off);
 
 with Ada.Text_IO;
+with Ada.Streams;
 with IPFS.CID;
 with IPFS.Multibase;
 with Interfaces;
@@ -194,6 +195,22 @@ package body CID_Tests is
          Assert (False, "Wrong exception for raw codec to v0");
    end Test_To_V0_Non_Dag_Pb;
 
+   procedure Test_From_Bytes_Missing_Multihash is
+      use Ada.Streams;
+      Bytes : constant Stream_Element_Array :=
+        [1 => 16#01#, 2 => 16#55#];  --  version=1, codec=raw, NO multihash
+      C : CID_Type;
+      pragma Unreferenced (C);
+   begin
+      C := From_Bytes (Bytes);
+      Assert (False, "Should reject CIDv1 bytes without multihash");
+   exception
+      when Malformed_CID =>
+         Assert (True, "Rejects CIDv1 bytes without multihash");
+      when others =>
+         Assert (False, "Wrong exception for missing multihash");
+   end Test_From_Bytes_Missing_Multihash;
+
    procedure Run is
    begin
       Tests_Run := 0;
@@ -210,6 +227,7 @@ package body CID_Tests is
       Test_Reject_Short_Qm;
       Test_Equals;
       Test_To_V0_Non_Dag_Pb;
+      Test_From_Bytes_Missing_Multihash;
 
       Put_Line ("CID tests:" & Tests_Run'Image & " run," &
                 Tests_Passed'Image & " passed");

@@ -149,7 +149,7 @@ package body IPFS.Multibase is
 
       for Char of Text loop
          --  Find character in alphabet (case-insensitive)
-         Value := 0;
+         Value := Natural'Last;
          for J in Base32_Alphabet'Range loop
             if Char = Base32_Alphabet (J)
               or else Char = Character'Val
@@ -159,6 +159,13 @@ package body IPFS.Multibase is
                exit;
             end if;
          end loop;
+
+         --  RFC 4648 base32 uses only A-Z2-7: reject everything else
+         --  ('1', '8', '9', '0' are not in the alphabet) instead of
+         --  silently decoding unknown input as zero.
+         if Value = Natural'Last then
+            raise Malformed_Encoding with "Invalid base32 character";
+         end if;
 
          --  Check for padding (not allowed in multibase base32)
          if Char = '=' then
@@ -273,7 +280,7 @@ package body IPFS.Multibase is
 
          --  Find value
          declare
-            Value : Natural := 0;
+            Value : Natural := Natural'Last;
          begin
             for J in Base58_Alphabet'Range loop
                if Char = Base58_Alphabet (J) then
@@ -281,6 +288,12 @@ package body IPFS.Multibase is
                   exit;
                end if;
             end loop;
+
+            --  Characters outside the Bitcoin alphabet (0, O, I, l, +, /)
+            --  must be rejected, not silently decoded as zero.
+            if Value = Natural'Last then
+               raise Malformed_Encoding with "Invalid base58 character";
+            end if;
 
             --  Multiply temp by 58 and add value
             declare

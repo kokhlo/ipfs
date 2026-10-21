@@ -57,6 +57,14 @@ package body IPFS.Varint is
             raise Malformed_Varint with "unterminated or overlong varint";
          end if;
          B := Interfaces.Unsigned_8 (Buffer (I));
+         if Shift >= 64
+           or else (Shift = 63 and then (B and Payload_Mask) > 1)
+         then
+            --  A 64-bit varint fits in at most 10 bytes; the 10th byte
+            --  may only be 0x00/0x01 (the single bit 63). Anything above
+            --  overflows Unsigned_64 and must be rejected, not wrapped.
+            raise Malformed_Varint with "varint overflows 64 bits";
+         end if;
          Result :=
            Result or
              Interfaces.Shift_Left

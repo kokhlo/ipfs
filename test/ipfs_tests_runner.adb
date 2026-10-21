@@ -3,6 +3,7 @@
 with SHA256_Tests;
 with Multibase_Tests;
 with Multihash_Tests;
+with Varint_Tests;
 with CID_Tests;
 with DagPB_Tests;
 with UnixFS_Tests;
@@ -16,6 +17,7 @@ begin
    SHA256_Tests.Run;
    Multibase_Tests.Run;
    Multihash_Tests.Run;
+   Varint_Tests.Run;
    CID_Tests.Run;
    DagPB_Tests.Run;
    UnixFS_Tests.Run;

@@ -9,7 +9,7 @@ package IPFS.Varint is
 
    use type Ada.Streams.Stream_Element_Offset;
 
-   Max_Length : constant := 9;
+   Max_Length : constant := 10;
 
    Malformed_Varint : exception;
 

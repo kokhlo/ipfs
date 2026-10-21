@@ -375,6 +375,11 @@ package body IPFS.CID is
          end if;
 
          IPFS.Varint.Decode (Bytes, Offset, Codec_Val, Last);
+         Offset := Last + 1;
+
+         if Offset > Bytes'Last then
+            raise Malformed_CID with "Missing multihash in CIDv1 bytes";
+         end if;
 
          Result.CID_Version := 1;
          Result.CID_Codec := Codec_Val;

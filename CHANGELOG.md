@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] — 2026-10-21
+
+### Fixed
+
+- `IPFS.Multibase`: invalid characters are now rejected instead of being
+  silently decoded as zero bytes — base58 inputs containing `0`, `O`, `I`, `l`
+  and base32 inputs containing `1`, `8`, `9`, `0` (or any byte outside
+  RFC 4648) raise `Malformed_Encoding`.
+- `IPFS.CID.From_Bytes`: CIDv1 binary with version+codec but **no multihash**
+  bytes now raises `Malformed_CID` instead of constructing an invalid CID.
+- `IPFS.Varint.Decode`: rejects varints whose payload exceeds 64 bits
+  (previously the excess bits were silently dropped by modular shift); the
+  legal 10-byte encoding of `2**64-1` (final byte `0x01`) now decodes
+  correctly, making `Encode`/`Decode` round-trip the full Unsigned_64 range.
+
+### Added
+
+- `Varint_Tests` suite (16 checks: round-trips, encoded lengths, 10-byte
+  u64-max form, overflow/overlong/truncation rejection).
+- Regression tests: base58 `O`/`I`/`l` rejection, base32 `1` rejection,
+  CIDv1-without-multihash rejection (28 new checks total, suite now 155).
+- CI: GNAT 14.2.1 + 16.1.0 build/test matrix on ubuntu/macos (was 16.1-only);
+  release workflow enforcing tag/manifest version parity.
+- `CONTRIBUTING.md`.
+
+[0.2.0]: https://github.com/kokhlo/ipfs/releases/tag/v0.2.0
+
 ## [0.1.0] — 2026-09-07
 
 ### Added
