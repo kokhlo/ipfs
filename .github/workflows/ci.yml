@@ -13,8 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-15]
         gnat: ["14.2.1", "16.1.0"]
+        # macos-latest (macOS 26) ships a libSystem.tbd the GNAT 16.1 linker
+        # cannot parse ("unknown architecture"); macos-15 hosts both toolchains.
     steps:
       - uses: actions/checkout@v4
 
